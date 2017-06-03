@@ -3,15 +3,15 @@ package org.quetzalcode.games.snake.listener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+import org.quetzalcode.games.snake.Snake;
 import org.quetzalcode.games.snake.constants.SnakeDirections;
-import org.quetzalcode.games.snake.domain.Snake;
 
 public class MovementKeyAdapter extends KeyAdapter {
  
 	private Snake snake;
 	
-	public MovementKeyAdapter(){
-		this.snake=Snake.getInstance();
+	public MovementKeyAdapter(Snake snake){
+		this.snake=snake;
 	}
 	
 	@Override

@@ -1,4 +1,4 @@
-package org.quetzalcode.games.snake.domain;
+package org.quetzalcode.games.snake.shackle;
 
 public class Point {
 	private int x;

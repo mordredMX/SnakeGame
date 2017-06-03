@@ -1,28 +1,42 @@
 package org.quetzalcode.games.snake.panel;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import org.quetzalcode.games.snake.constants.SnakeConstants;
-import org.quetzalcode.games.snake.domain.Shackle;
-import org.quetzalcode.games.snake.domain.Snake;
-import org.quetzalcode.games.snake.manager.ShackleManager;
+import org.quetzalcode.games.snake.SnakeGame;
+import org.quetzalcode.games.snake.listener.MovementKeyAdapter;
+import org.quetzalcode.games.snake.shackle.Shackle;
 
 public class SnakeStage extends JPanel {
 
-	private Shackle lostShackle;
-	private Snake snake;
-	private ShackleManager shackleManager;
+	private SnakeGame game;
+
 	private int shackleSize;
 
-	public SnakeStage( int shackleSize) {
+	public SnakeStage(SnakeGame snakeGame) {
 		super();
-		shackleManager = ShackleManager.getInstance();
-		this.snake = Snake.getInstance();
-		this.shackleSize=shackleSize;
+		this.game = snakeGame;
+	}
+
+	public void setup() {
+		Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
+		int screenSize = screenDimension.height < screenDimension.width ? screenDimension.height
+				: screenDimension.width;
+		shackleSize = screenSize / game.getConfig().getRate();
+
+		JFrame frame = new JFrame();
+		frame.add(this);
+		frame.addKeyListener(new MovementKeyAdapter(game.getSnake()));
+		frame.setSize(screenSize, screenSize);
+		frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 	}
 
 	/**
@@ -36,36 +50,22 @@ public class SnakeStage extends JPanel {
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		drawSnake(g2d);
-		drawShackle(g2d, lostShackle);
+		drawLostShackle(g2d);
 
 	}
 
 	private void drawSnake(Graphics2D g2d) {
-		for (Shackle shackle : snake.getShackles()) {
+		for (Shackle shackle : game.getSnake().getShackles()) {
 			drawShackle(g2d, shackle);
 		}
 	}
-	
-	private void drawShackle(Graphics2D g2d,Shackle shackle){
-		g2d.fillRect((int) shackle.getX()*shackleSize, (int) shackle.getY()*shackleSize, shackleSize, shackleSize);
+
+	private void drawLostShackle(Graphics2D g2d) {
+		drawShackle(g2d, game.getLostShackle());
 	}
 
-	public void start() throws InterruptedException {
-		lostShackle = shackleManager.generateNewShackle(snake);
-		long initialSpeed=SnakeConstants.INITIAL_SPEED;
-		while (true) {
-			snake.move();
-			this.repaint();
-			if (shackleManager.hasFoundLostShackle(lostShackle, snake.getShackles().get(0), snake.getDirection())) {
-				snake.addShackle(lostShackle);
-				lostShackle = shackleManager.generateNewShackle(snake);
-				initialSpeed-=5;
-			} else
-			{
-				
-				Thread.sleep(initialSpeed);
-			}
-
-		}
+	private void drawShackle(Graphics2D g2d, Shackle shackle) {
+		g2d.fillRect((int) shackle.getX() * shackleSize, (int) shackle.getY() * shackleSize, shackleSize, shackleSize);
 	}
+
 }

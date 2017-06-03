@@ -27,5 +27,9 @@ public class Point {
 		}
 		return (this.getX()==((Point)other).getX() && this.getY()==((Point)other).getY());
 	}
-	
+
+	@Override
+	public String toString(){
+		return "x:"+this.getX()+" ; y"+this.getY();
+	}
 }

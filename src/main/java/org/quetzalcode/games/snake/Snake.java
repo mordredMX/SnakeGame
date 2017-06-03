@@ -3,7 +3,6 @@ package org.quetzalcode.games.snake;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.quetzalcode.games.snake.constants.SnakeConstants;
 import org.quetzalcode.games.snake.constants.SnakeDirections;
 import org.quetzalcode.games.snake.exception.GameOverException;
 import org.quetzalcode.games.snake.shackle.Shackle;
@@ -11,15 +10,13 @@ import org.quetzalcode.games.snake.shackle.Shackle;
 public class Snake {
 	private List<Shackle> shackles;
 
-	public List<Shackle> getShackles() {
-		return shackles;
-	}
+	private SnakeDirections direction;
 
-	public Snake() {
+	public Snake(int initialX,int initialY,SnakeDirections initialDirection) {
 		shackles = new ArrayList<Shackle>();
-		Shackle shackle = new Shackle(SnakeConstants.INITIAL_X, SnakeConstants.INITIAL_Y);
+		Shackle shackle = new Shackle(initialX, initialY);
 		shackles.add(shackle);
-		this.direction = SnakeDirections.RIGHT;
+		this.direction = initialDirection;
 	}
 
 	public void move() {
@@ -51,10 +48,6 @@ public class Snake {
 		}
 	}
 
-	public SnakeDirections getDirection() {
-		return direction;
-	}
-
 	public boolean changeDirection(SnakeDirections direction) {
 		synchronized (this) {
 			if (this.direction.getContrayDirection().equals(direction)) {
@@ -65,8 +58,6 @@ public class Snake {
 			}
 		}
 	}
-
-	private SnakeDirections direction;
 
 	public void addShackle(Shackle lostShackle) {
 		synchronized (this) {
@@ -86,4 +77,13 @@ public class Snake {
 		}
 	}
 
+	public List<Shackle> getShackles() {
+		return shackles;
+	}
+
+	public SnakeDirections getDirection() {
+		return direction;
+	}
+
+	
 }

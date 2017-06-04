@@ -8,11 +8,15 @@ public class SnakeConfiguration {
 	}
 	
 	public int randomRetries(){
-		return SnakeConstants.TRIES;
+		return SnakeConstants.RANDOM_RETRIES;
 	}
 	
-	public long getInitialSpeed(){
-		return SnakeConstants.INITIAL_SPEED;
+	public long getSleepTime(){
+		return SnakeConstants.SLEEP_TIME;
+	}
+	
+	public long getSleepDecrement(){
+		return SnakeConstants.SLEEP_DECREMENT;
 	}
 	
 	public int getInitialX(){

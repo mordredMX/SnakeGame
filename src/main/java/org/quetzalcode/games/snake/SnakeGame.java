@@ -65,7 +65,7 @@ public class SnakeGame {
 	}
 
 	private Point getNextPointInSnake() {
-		final Shackle shackle = snake.getShackles().get(0);
+		final Shackle shackle = snake.getFirstShackle();
 		final Point nextPoint = SnakeUtils.getNextPoint(shackle, snake.getDirection());
 		return nextPoint;
 	}
@@ -76,7 +76,7 @@ public class SnakeGame {
 	}
 
 	public void start() throws InterruptedException {
-		long initialSpeed = config.getInitialSpeed();
+		long initialSpeed = config.getSleepTime();
 		while (true) {
 			snake.move();
 			stage.repaint();
@@ -86,7 +86,7 @@ public class SnakeGame {
 			if (hasFoundLostShackle()) {
 				snake.addShackle(lostShackle);
 				generateNewLostShackle();
-				initialSpeed -= 5;
+				initialSpeed -= config.getSleepDecrement();
 			} else {
 
 				Thread.sleep(initialSpeed);

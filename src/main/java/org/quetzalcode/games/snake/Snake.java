@@ -1,7 +1,7 @@
 package org.quetzalcode.games.snake;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import org.quetzalcode.games.snake.constants.SnakeDirections;
 import org.quetzalcode.games.snake.exception.GameOverException;
@@ -9,12 +9,14 @@ import org.quetzalcode.games.snake.shackle.Point;
 import org.quetzalcode.games.snake.shackle.Shackle;
 
 public class Snake {
-	private List<Shackle> shackles;
+	private static final int SNAKE_CAPACITY = 500;
+
+	private BlockingDeque<Shackle> shackles;
 
 	private SnakeDirections direction;
 
-	public Snake(int initialX,int initialY,SnakeDirections initialDirection) {
-		shackles = new ArrayList<Shackle>();
+	public Snake(final int initialX,final int initialY,final SnakeDirections initialDirection) {
+		shackles = new LinkedBlockingDeque<Shackle>(SNAKE_CAPACITY);
 		Shackle shackle = new Shackle(initialX, initialY);
 		shackles.add(shackle);
 		this.direction = initialDirection;
@@ -22,7 +24,7 @@ public class Snake {
 
 	public void move() {
 		synchronized (this) {
-			Shackle firstShacke = shackles.get(0);
+			Shackle firstShacke = shackles.getFirst();
 			int currentX = (int) firstShacke.getX();
 			int currentY = (int) firstShacke.getY();
 
@@ -44,12 +46,12 @@ public class Snake {
 			if (shackles.contains(newShackle)) {
 				throw new GameOverException();
 			}
-			shackles.add(0, newShackle);
-			shackles.remove(shackles.size() - 1);
+			shackles.addFirst(newShackle);
+			shackles.removeLast();
 		}
 	}
 
-	public boolean changeDirection(SnakeDirections direction) {
+	public boolean changeDirection(final SnakeDirections direction) {
 		synchronized (this) {
 			if (this.direction.getContrayDirection().equals(direction)) {
 				return false;
@@ -60,9 +62,9 @@ public class Snake {
 		}
 	}
 
-	public void addShackle(Shackle lostShackle) {
+	public void addShackle(final Shackle lostShackle) {
 		synchronized (this) {
-			shackles.add(0, lostShackle);
+			shackles.addFirst(lostShackle);
 		}
 	}
 
@@ -72,8 +74,12 @@ public class Snake {
 		}
 	}
 
-	public List<Shackle> getShackles() {
-		return shackles;
+	public Shackle[] getShackles(){
+		return shackles.toArray(new Shackle[0]);
+	}
+	
+	public Shackle getFirstShackle(){
+		return shackles.getFirst();
 	}
 
 	public SnakeDirections getDirection() {

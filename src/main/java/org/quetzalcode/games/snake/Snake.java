@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.quetzalcode.games.snake.constants.SnakeDirections;
 import org.quetzalcode.games.snake.exception.GameOverException;
+import org.quetzalcode.games.snake.shackle.Point;
 import org.quetzalcode.games.snake.shackle.Shackle;
 
 public class Snake {
@@ -65,15 +66,9 @@ public class Snake {
 		}
 	}
 
-	public boolean doesShackleExistsInList(int x, int y) {
+	public boolean doesShackleExistsInList(final Point point) {
 		synchronized (this) {
-			for (Shackle shackle : shackles) {
-				if (shackle.getX() == x && shackle.getY() == y) {
-					return true;
-
-				}
-			}
-			return false;
+			return shackles.contains(point);
 		}
 	}
 

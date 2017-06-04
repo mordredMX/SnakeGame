@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 
 import org.quetzalcode.games.snake.SnakeGame;
 import org.quetzalcode.games.snake.listener.MovementKeyAdapter;
+import org.quetzalcode.games.snake.shackle.Point;
 import org.quetzalcode.games.snake.shackle.Shackle;
 
 public class SnakeStage extends JPanel {
@@ -42,9 +43,15 @@ public class SnakeStage extends JPanel {
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
-
 	}
 
+	public boolean isInsidePanel(final Point point) {
+		if (point.getX() >= -1 && point.getX() <= game.getConfig().getRate()
+				&& point.getY() <= game.getConfig().getRate() && point.getY() >= -1) {
+			return true;
+		}
+		return false;
+	}
 
 	@Override
 	public void paint(final Graphics g) {
